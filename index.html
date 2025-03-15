@@ -27,47 +27,30 @@
         }
     </script>
 </head>
-<body class="bg-white font-poppins">
+<body class="bg-primary font-poppins h-screen overflow-hidden">
     <!-- Navigation -->
-    <nav class="bg-primary text-white fixed w-full z-50">
+    <nav class="bg-primary text-white w-full z-50 border-b border-white/10">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-12">
                     <a href="#" class="text-xl md:text-2xl font-bold">ISP Logo</a>
-                </div>
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="#" class="hover:text-accent">Personal</a>
-                    <a href="#" class="hover:text-accent">Business</a>
-                    <a href="#" class="hover:text-accent">Enterprise</a>
-                    <a href="#" class="hover:text-accent">Support</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="block md:hidden hover:text-accent p-3 z-50 bg-white/20 rounded-lg fixed top-4 right-4 shadow-lg cursor-pointer" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" aria-label="Menu">
-                        <i class="fas fa-bars text-3xl"></i>
-                    </button>
-                    <div class="hidden md:flex items-center space-x-4">
-                        <a href="#" class="hover:text-accent">Login</a>
-                        <a href="#" class="hover:text-accent"><i class="fas fa-shopping-cart"></i></a>
-                        <span>1300 880 905</span>
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#" class="hover:text-accent">Personal</a>
+                        <a href="#" class="hover:text-accent">Business</a>
+                        <a href="#" class="hover:text-accent">Enterprise</a>
+                        <a href="#" class="hover:text-accent">Support</a>
                     </div>
                 </div>
-            </div>
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden py-4 border-t border-white/10 bg-primary absolute top-full left-0 w-full shadow-lg">
-                <div class="flex flex-col space-y-4">
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg">Personal</a>
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg">Business</a>
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg">Enterprise</a>
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg">Support</a>
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg">Login</a>
-                    <a href="#" class="hover:text-accent px-6 py-2 text-lg"><i class="fas fa-shopping-cart mr-2"></i>Cart</a>
-                    <div class="px-6 py-2 text-lg border-t border-white/10 mt-2">1300 880 905</div>
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="hover:text-accent">Login</a>
+                    <a href="#" class="hover:text-accent"><i class="fas fa-shopping-cart"></i></a>
+                    <span>1300 880 905</span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="bg-primary min-h-screen pt-20">
+    <div class="h-[calc(100vh-4rem)] overflow-y-auto">
         <div class="container mx-auto px-4 py-16">
             <!-- Hero content -->
             <div class="text-center text-white mb-12">
@@ -83,25 +66,25 @@
             <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8">
                 <!-- Progress Bar -->
                 <div class="w-full h-2 bg-gray-200 rounded-full mb-8 overflow-hidden">
-                    <div id="progress-bar" class="h-full bg-primary rounded-full" style="width: 0%"></div>
+                    <div id="progress-bar" class="h-full bg-primary rounded-full transition-all duration-300" style="width: 0%"></div>
                 </div>
 
                 <!-- Step Indicators -->
                 <div class="flex flex-wrap justify-between mb-8 gap-y-4">
                     <div class="flex items-center">
-                        <div id="indicator-address" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold">1</div>
+                        <div id="indicator-address" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold transition-colors duration-300">1</div>
                         <div class="ml-2 font-medium">Address</div>
                     </div>
                     <div class="flex items-center">
-                        <div id="indicator-plans" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold">2</div>
+                        <div id="indicator-plans" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold transition-colors duration-300">2</div>
                         <div class="ml-2 font-medium">Plans</div>
                     </div>
                     <div class="flex items-center">
-                        <div id="indicator-details" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold">3</div>
+                        <div id="indicator-details" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold transition-colors duration-300">3</div>
                         <div class="ml-2 font-medium">Details</div>
                     </div>
                     <div class="flex items-center">
-                        <div id="indicator-confirm" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold">4</div>
+                        <div id="indicator-confirm" class="w-10 h-10 rounded-full flex items-center justify-center border-2 border-gray-300 text-lg font-semibold transition-colors duration-300">4</div>
                         <div class="ml-2 font-medium">Confirm</div>
                     </div>
                 </div>
@@ -112,39 +95,26 @@
                 </div>
 
                 <!-- Step 1: Address -->
-                <div id="step-address">
-                    <div class="mb-8">
+                <div id="step-address" class="step-transition">
                     <div class="relative w-full">
-                        <div class="relative">
-                            <input type="text" 
-                                   id="address-input"
-                                   placeholder="Enter your address" 
-                                   class="w-full px-4 py-3 border-2 border-primary rounded-lg focus:outline-none focus:border-primary text-base transition-all duration-300"
-                                   autocomplete="off"
-                            >
-                            <button id="search-btn" onclick="nextStep()" class="absolute right-2 top-2 bg-primary text-white px-4 md:px-6 py-2 rounded-lg hover:bg-opacity-90 text-sm md:text-base transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary">
-                                Search
-                            </button>
-                            <!-- Address suggestions box -->
-                            <div id="address-suggestions" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
-                                <!-- Suggestions will be populated here -->
-                            </div>
+                        <input type="text" 
+                               id="address-input"
+                               placeholder="Enter your address" 
+                               class="w-full px-4 py-3 border-2 border-primary rounded-lg focus:outline-none focus:border-primary text-base transition-all duration-300"
+                               autocomplete="off"
+                        >
+                        <button id="search-btn" class="absolute right-2 top-2 bg-primary text-white px-4 md:px-6 py-2 rounded-lg hover:bg-opacity-90 text-sm md:text-base transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary">
+                            Search
+                        </button>
+                        <!-- Address suggestions box -->
+                        <div id="address-suggestions" class="absolute w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+                            <!-- Suggestions will be populated here -->
                         </div>
-                    </div>
-                    </div>
-
-                    <div class="flex justify-center space-x-4 w-full">
-                        <button class="bg-primary text-white px-4 md:px-8 py-3 rounded-lg hover:bg-opacity-90 flex-1 md:flex-none text-sm md:text-base">
-                            HOME
-                        </button>
-                        <button class="bg-gray-800 text-white px-4 md:px-8 py-3 rounded-lg hover:bg-opacity-90 flex-1 md:flex-none text-sm md:text-base">
-                            BUSINESS
-                        </button>
                     </div>
                 </div>
 
                 <!-- Step 2: Plans -->
-                <div id="step-plans" class="hidden">
+                <div id="step-plans" class="hidden step-transition">
                     <h2 class="text-2xl font-bold mb-6">Choose Your Plan</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Basic Plan -->
@@ -195,36 +165,36 @@
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Back</button>
-                        <button onclick="nextStep()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-primary">Continue</button>
+                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-300">Back</button>
+                        <button onclick="nextStep()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300">Continue</button>
                     </div>
                 </div>
 
                 <!-- Step 3: Details -->
-                <div id="step-details" class="hidden">
+                <div id="step-details" class="hidden step-transition">
                     <h2 class="text-2xl font-bold mb-6">Your Details</h2>
                     <div class="space-y-4">
                         <div>
                             <label class="block text-gray-700 mb-2">Full Name</label>
-                            <input type="text" id="user-name" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                            <input type="text" id="user-name" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300">
                         </div>
                         <div>
                             <label class="block text-gray-700 mb-2">Email</label>
-                            <input type="email" id="user-email" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                            <input type="email" id="user-email" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300">
                         </div>
                         <div>
                             <label class="block text-gray-700 mb-2">Phone</label>
-                            <input type="tel" id="user-phone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary">
+                            <input type="tel" id="user-phone" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary transition-colors duration-300">
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Back</button>
-                        <button onclick="nextStep()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90">Continue</button>
+                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-300">Back</button>
+                        <button onclick="nextStep()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300">Continue</button>
                     </div>
                 </div>
 
                 <!-- Step 4: Confirm -->
-                <div id="step-confirm" class="hidden">
+                <div id="step-confirm" class="hidden step-transition">
                     <h2 class="text-2xl font-bold mb-6">Confirm Your Order</h2>
                     <div class="bg-gray-50 p-6 rounded-lg mb-6">
                         <h3 class="font-bold mb-4">Order Summary</h3>
@@ -244,8 +214,8 @@
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400">Back</button>
-                        <button onclick="submitOrder()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90">Confirm Order</button>
+                        <button onclick="previousStep()" class="bg-gray-300 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-300">Back</button>
+                        <button onclick="submitOrder()" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-colors duration-300">Confirm Order</button>
                     </div>
                 </div>
             </div>
