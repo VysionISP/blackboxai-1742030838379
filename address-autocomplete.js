@@ -146,27 +146,69 @@ function initializeAutocomplete() {
                 }
 
                 const data = await response.json();
-                console.log('Available plans:', data);
+                console.log('API Response:', data);
 
-                // Create a pre-formatted element to display the JSON
+                if (!data.responseData || data.responseData.length === 0) {
+                    throw new Error('No addresses found');
+                }
+
+                // Display the found addresses in a formatted way
                 const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden');
+                errorMessage.classList.remove('hidden', 'bg-red-100', 'border-red-500', 'text-red-700');
+                errorMessage.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500', 'text-blue-700');
+
+                const addressesHtml = data.responseData.map(addr => `
+                    <div class="p-4 border-b border-blue-200 last:border-0">
+                        <div class="font-semibold">${addr.formattedAddress}</div>
+                        <div class="text-sm mt-1">
+                            <span class="text-blue-600">Location ID:</span> ${addr.id}
+                        </div>
+                        <div class="text-sm mt-1 grid grid-cols-2 gap-2">
+                            <div>
+                                <span class="text-blue-600">Unit:</span> ${addr.unitNumber || 'N/A'}
+                            </div>
+                            <div>
+                                <span class="text-blue-600">Street:</span> ${addr.roadNumber1}${addr.roadNumber2 ? '-' + addr.roadNumber2 : ''} ${addr.roadName} ${addr.roadTypeCode}
+                            </div>
+                        </div>
+                        <div class="text-sm mt-1">
+                            <span class="text-blue-600">Location:</span> ${addr.localityName}, ${addr.stateTerritoryCode} ${addr.postcode}
+                        </div>
+                        <button class="mt-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-300"
+                                onclick="confirmAddress('${addr.id}', '${addr.formattedAddress}')">
+                            Confirm This Address
+                        </button>
+                    </div>
+                `).join('');
+
                 errorMessage.innerHTML = `
-                    <div class="font-mono text-sm overflow-auto">
-                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <div class="p-4">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <span class="font-semibold">Please confirm your address:</span>
+                        </div>
+                        ${addressesHtml}
                     </div>
                 `;
 
-                // Proceed to next step
-                nextStep();
+                // Add global function to handle address confirmation
+                window.confirmAddress = (id, formattedAddress) => {
+                    window.selectedLocationId = id;
+                    document.getElementById('selected-address').textContent = formattedAddress;
+                    nextStep();
+                };
+
             } catch (error) {
-                console.error('Error fetching plans:', error);
+                console.error('Error fetching addresses:', error);
                 const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden');
+                errorMessage.classList.remove('hidden', 'bg-blue-50', 'border-blue-500', 'text-blue-700');
+                errorMessage.classList.add('bg-red-100', 'border-l-4', 'border-red-500', 'text-red-700');
                 errorMessage.innerHTML = `
-                    <div class="text-red-700">
-                        <i class="fas fa-exclamation-circle mr-2"></i>
-                        Error fetching available plans. Please try again.
+                    <div class="p-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            <span>Error: ${error.message || 'Failed to fetch addresses. Please try again.'}</span>
+                        </div>
                     </div>
                 `;
             }
