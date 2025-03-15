@@ -130,6 +130,17 @@ function initializeAutocomplete() {
     searchButton.addEventListener('click', async () => {
         if (window.selectedAddress) {
             try {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.classList.remove('hidden');
+                errorMessage.innerHTML = `
+                    <div class="p-4">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            <span>Searching for address...</span>
+                        </div>
+                    </div>
+                `;
+
                 // First API call to get location ID
                 const response = await fetch(API_CONFIG.url, {
                     method: 'POST',
@@ -142,71 +153,43 @@ function initializeAutocomplete() {
                     })
                 });
 
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                // Display raw API response
+                errorMessage.innerHTML = `
+                    <div class="p-4">
+                        <h3 class="text-lg font-bold mb-4">API Response:</h3>
+                        <pre class="bg-gray-100 p-4 rounded-lg overflow-auto max-h-96 text-sm font-mono">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
-                const data = await response.json();
-                console.log('API Response:', data);
 
                 if (!data.responseData || data.responseData.length === 0) {
                     throw new Error('No addresses found');
                 }
 
-                // Display the found addresses in a formatted way
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden', 'bg-red-100', 'border-red-500', 'text-red-700');
-                errorMessage.classList.add('bg-blue-50', 'border-l-4', 'border-blue-500', 'text-blue-700');
-
-                const addressesHtml = data.responseData.map(addr => `
-                    <div class="p-4 border-b border-blue-200 last:border-0">
-                        <div class="font-semibold">${addr.formattedAddress}</div>
-                        <div class="text-sm mt-2 grid grid-cols-2 gap-2">
-                            <div>
-                                <span class="text-blue-600">Unit:</span> ${addr.unitNumber || 'N/A'}
-                            </div>
-                            <div>
-                                <span class="text-blue-600">Street:</span> ${addr.roadNumber1}${addr.roadNumber2 ? '-' + addr.roadNumber2 : ''} ${addr.roadName} ${addr.roadTypeCode}
-                            </div>
-                        </div>
-                        <div class="text-sm mt-1">
-                            <span class="text-blue-600">Location:</span> ${addr.localityName}, ${addr.stateTerritoryCode} ${addr.postcode}
-                        </div>
-                        <button class="mt-3 bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-300"
-                                onclick="confirmAddress('${addr.id}', '${addr.formattedAddress}')">
-                            Use This Address
-                        </button>
-                    </div>
-                `).join('');
-
-                errorMessage.innerHTML = `
-                    <div class="p-4">
-                        <div class="flex items-center mb-4">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            <span class="font-semibold">Please confirm your address:</span>
-                        </div>
-                        ${addressesHtml}
-                    </div>
-                `;
-
-                // Add global function to handle address confirmation
-                window.confirmAddress = (id, formattedAddress) => {
-                    window.selectedLocationId = id;
-                    document.getElementById('selected-address').textContent = formattedAddress;
+                // Store the first location ID and address if found
+                if (data.responseData[0]) {
+                    window.selectedLocationId = data.responseData[0].id;
+                    document.getElementById('selected-address').textContent = data.responseData[0].formattedAddress;
                     nextStep();
-                };
+                }
 
             } catch (error) {
                 console.error('Error fetching addresses:', error);
                 const errorMessage = document.getElementById('error-message');
-                errorMessage.classList.remove('hidden', 'bg-blue-50', 'border-blue-500', 'text-blue-700');
-                errorMessage.classList.add('bg-red-100', 'border-l-4', 'border-red-500', 'text-red-700');
+                errorMessage.classList.remove('hidden');
                 errorMessage.innerHTML = `
                     <div class="p-4">
-                        <div class="flex items-center">
+                        <div class="flex items-center mb-4">
                             <i class="fas fa-exclamation-circle mr-2"></i>
                             <span>Error: ${error.message || 'Failed to fetch addresses. Please try again.'}</span>
                         </div>
+                        <pre class="bg-gray-100 p-4 rounded-lg overflow-auto max-h-96 text-sm font-mono">${error.stack || ''}</pre>
                     </div>
                 `;
             }
