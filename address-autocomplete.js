@@ -130,6 +130,7 @@ function initializeAutocomplete() {
     searchButton.addEventListener('click', async () => {
         if (window.selectedAddress) {
             try {
+                // First API call to get location ID
                 const response = await fetch(API_CONFIG.url, {
                     method: 'POST',
                     headers: {
@@ -160,10 +161,7 @@ function initializeAutocomplete() {
                 const addressesHtml = data.responseData.map(addr => `
                     <div class="p-4 border-b border-blue-200 last:border-0">
                         <div class="font-semibold">${addr.formattedAddress}</div>
-                        <div class="text-sm mt-1">
-                            <span class="text-blue-600">Location ID:</span> ${addr.id}
-                        </div>
-                        <div class="text-sm mt-1 grid grid-cols-2 gap-2">
+                        <div class="text-sm mt-2 grid grid-cols-2 gap-2">
                             <div>
                                 <span class="text-blue-600">Unit:</span> ${addr.unitNumber || 'N/A'}
                             </div>
@@ -174,9 +172,9 @@ function initializeAutocomplete() {
                         <div class="text-sm mt-1">
                             <span class="text-blue-600">Location:</span> ${addr.localityName}, ${addr.stateTerritoryCode} ${addr.postcode}
                         </div>
-                        <button class="mt-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-300"
+                        <button class="mt-3 bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition-all duration-300"
                                 onclick="confirmAddress('${addr.id}', '${addr.formattedAddress}')">
-                            Confirm This Address
+                            Use This Address
                         </button>
                     </div>
                 `).join('');
