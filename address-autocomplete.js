@@ -4,6 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAutocomplete();
 });
 
+// API Configuration
+const API_CONFIG = {
+    url: 'https://mars.as24516.net:443/api/v1/locations',
+    authToken: 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InhnemFlQXNxdzN6dllCZ3RYVm9KWiJ9.eyJpc3MiOiJodHRwczovL3ZpcnR1dGVsLmF1LmF1dGgwLmNvbS8iLCJzdWIiOiJZamlvUHZYQWZsNFBldWdIMXRTYThBU2RGTk9uTEZqUkBjbGllbnRzIiwiYXVkIjoibWFycy5hczI0NTE2Lm5ldCIsImlhdCI6MTc0MjA0MDIwMywiZXhwIjoxNzQ0NjMyMjAzLCJzY29wZSI6InJlYWQ6c2VydmljZS1xdWFsaWZpY2F0aW9ucyBhcGk6cHJvZHVjdGlvbiByZWFkOmxvY2F0aW9ucyByZWFkOmRlbW9ncmFwaGljcyIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IllqaW9QdlhBZmw0UGV1Z0gxdFNhOEFTZEZOT25MRmpSIn0.SXPJqAw3I0n3AGnuWQRE0uqsHNjsdZFtmmmIUa_KBYhU7X3E3LdJ8LWrqYrFOzNGOxf_JqLZL8aFbTdIuXw48yfPZ-rxhNpM1OQLTS5JJ9alnDIm2OU5oU-C1LypbEZqIlo6EdXQ4xdExaEoZYpCkEcw_B-DC4PtcwmR7C-VW_QlpQkIfhsE2Zr_feAAA-JwPgKmNaqP0d5VW3cxUsee17lClnZLJcQOLhHqvtligi8lpx3YBBqXIE8AK8x9IZxq0-wySgqw3lsGjKCZ_VqfNyDBinFQ0rWCxlPuU3srFkvaOzrGlUbVDlMRWLhw5bYJSk7WTB1AUTxHvzNKEMUdxg'
+};
+
 // Initialize the autocomplete
 function initializeAutocomplete() {
     console.log('Initializing autocomplete');
@@ -27,7 +33,6 @@ function initializeAutocomplete() {
     let timeoutId = null;
     input.addEventListener('input', () => {
         const query = input.value.trim();
-        validateAndUpdateUI(query, input, searchButton);
 
         // Clear previous timeout
         if (timeoutId) clearTimeout(timeoutId);
@@ -35,6 +40,8 @@ function initializeAutocomplete() {
         // Hide suggestions if input is too short
         if (query.length < 3) {
             suggestionsContainer.classList.add('hidden');
+            searchButton.disabled = true;
+            searchButton.classList.add('opacity-50', 'cursor-not-allowed');
             return;
         }
 
@@ -60,6 +67,8 @@ function initializeAutocomplete() {
                             <i class="fas fa-exclamation-circle mr-2"></i>No suggestions found
                         </div>
                     `;
+                    searchButton.disabled = true;
+                    searchButton.classList.add('opacity-50', 'cursor-not-allowed');
                     return;
                 }
 
@@ -96,7 +105,14 @@ function initializeAutocomplete() {
                         input.value = address;
                         window.selectedAddress = address;
                         suggestionsContainer.classList.add('hidden');
-                        validateAndUpdateUI(address, input, searchButton);
+                        
+                        // Enable search button
+                        searchButton.disabled = false;
+                        searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                        
+                        // Update input styling
+                        input.classList.remove('border-red-500');
+                        input.classList.add('border-primary');
                     });
                 });
             });
@@ -110,51 +126,64 @@ function initializeAutocomplete() {
         }
     });
 
+    // Handle search button click
+    searchButton.addEventListener('click', async () => {
+        if (window.selectedAddress) {
+            try {
+                const response = await fetch(API_CONFIG.url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': API_CONFIG.authToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        address: window.selectedAddress
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Available plans:', data);
+
+                // Create a pre-formatted element to display the JSON
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.classList.remove('hidden');
+                errorMessage.innerHTML = `
+                    <div class="font-mono text-sm overflow-auto">
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+
+                // Proceed to next step
+                nextStep();
+            } catch (error) {
+                console.error('Error fetching plans:', error);
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.classList.remove('hidden');
+                errorMessage.innerHTML = `
+                    <div class="text-red-700">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        Error fetching available plans. Please try again.
+                    </div>
+                `;
+            }
+        } else {
+            input.classList.add('border-red-500');
+        }
+    });
+
     // Prevent form submission on enter
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
+            if (window.selectedAddress) {
+                searchButton.click();
+            }
         }
     });
 
     console.log('Autocomplete initialized successfully');
-}
-
-// Basic validation function
-function validateAndUpdateUI(address, input, searchButton) {
-    console.log('Validating address:', address);
-    
-    if (!address || address.length < 5) {
-        input.classList.remove('border-red-500', 'border-gray-300');
-        input.classList.add('border-primary');
-        window.selectedAddress = '';
-        searchButton.disabled = true;
-        searchButton.classList.add('opacity-50', 'cursor-not-allowed');
-        return;
-    }
-
-    const isValid = address.includes(' ') && /\d/.test(address);
-    
-    if (isValid) {
-        window.selectedAddress = address;
-        input.classList.remove('border-red-500', 'border-gray-300');
-        input.classList.add('border-primary');
-        searchButton.disabled = false;
-        searchButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        updateSummary();
-    } else {
-        input.classList.remove('border-primary', 'border-gray-300');
-        input.classList.add('border-red-500');
-        window.selectedAddress = '';
-        searchButton.disabled = true;
-        searchButton.classList.add('opacity-50', 'cursor-not-allowed');
-    }
-}
-
-// Update summary in the confirmation step
-function updateSummary() {
-    const summaryAddress = document.getElementById('selected-address');
-    if (summaryAddress && window.selectedAddress) {
-        summaryAddress.textContent = window.selectedAddress;
-    }
 }
