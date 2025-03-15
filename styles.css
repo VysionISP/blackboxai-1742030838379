@@ -1,0 +1,111 @@
+/* Input styles */
+#address-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #006B2D;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s;
+    outline: none;
+}
+
+#address-input:focus {
+    box-shadow: 0 0 0 3px rgba(0, 107, 45, 0.1);
+}
+
+/* Search button styles */
+#search-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #006B2D;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+}
+
+#search-btn:hover:not(:disabled) {
+    background-color: #005724;
+}
+
+#search-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Suggestions container styles */
+#address-suggestions {
+    position: absolute;
+    width: 100%;
+    margin-top: 4px;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+/* Suggestion item styles */
+.suggestion-item {
+    transition: all 0.2s;
+}
+
+.suggestion-item:hover {
+    background-color: #f7fafc;
+}
+
+.suggestion-item .text-primary {
+    color: #006B2D;
+}
+
+/* Custom scrollbar for suggestions */
+.max-h-60 {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.max-h-60::-webkit-scrollbar {
+    width: 6px;
+}
+
+.max-h-60::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.max-h-60::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.max-h-60::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}
+
+/* Hide default browser autocomplete */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.fa-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Hide Google Places UI */
+.pac-container {
+    display: none !important;
+}
